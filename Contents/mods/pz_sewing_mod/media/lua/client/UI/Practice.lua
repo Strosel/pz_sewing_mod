@@ -39,10 +39,8 @@ local function createMenuEntries(player, context, items)
     local inventory = player:getInventory();
 
     local needle = inventory:FindAndReturn("Needle");
-    local thread = inventory:FindAndReturn("Thread");
+    local thread = inventory:getUsesType("Base.Thread");
     local fabric = inventory:getCountType("Base.RippedSheets");
-
-    thread = thread:getRemainingUses();
 
     if needle then
         for _, patches in ipairs({ 10, 25, 50 }) do
