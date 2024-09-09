@@ -1,4 +1,4 @@
-require('luautils');
+require "luautils";
 
 ---
 -- @param worldObjects
@@ -8,11 +8,7 @@ require('luautils');
 local function practiceSewing(worldObjects, patches, player)
     local inventory = player:getInventory();
 
-    local needle = inventory:FindAndReturn("Needle");
-    local thread = inventory:FindAndReturn("Thread");
-    local fabric = inventory:FindAndReturn("RippedSheets");
-
-    ISTimedActionQueue.add(TAPickDoorLock:new(player, door, time, primItem, scndItem));
+    ISTimedActionQueue.add(TAPracticeSewing:new(player, patches));
 end
 
 -- Creates the context menu entry for "practice sewing"
