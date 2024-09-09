@@ -10,7 +10,7 @@ local function practiceSewing(worldObjects, patches, player)
 
     local needle = inventory:FindAndReturn("Needle");
     local thread = inventory:FindAndReturn("Thread");
-    local fabric = inventory:FindAndReturn("RippedSheets"); --TODO use dirty sheets?
+    local fabric = inventory:FindAndReturn("RippedSheets");
 
     ISTimedActionQueue.add(TAPickDoorLock:new(player, door, time, primItem, scndItem));
 end
@@ -20,12 +20,13 @@ end
 -- @param context - The context menu.
 -- @param worldObjects - A list of clicked items.
 --
-local function createMenuEntries(player, context, worldObjects)
+local function createMenuEntries(player, context, items)
     local fabric;
     -- Search through the table of clicked items.
-    for _, object in ipairs(worldObjects) do
+    local items = ISInventoryPane.getActualItems(items)
+    for _, object in ipairs(items) do
         -- Look if the clicked item is a valid fabric.
-        if instanceof(object, "RippedSheets") then --TODO use dirty sheets?
+        if object:getFullType() == "Base.RippedSheets" then
             fabric = object;
             break;
         end
@@ -33,15 +34,21 @@ local function createMenuEntries(player, context, worldObjects)
 
     -- Exit early if we have no door.
     if not fabric then return end
-    
+
+    local player = getSpecificPlayer(player);
+    local inventory = player:getInventory();
+
     local needle = inventory:FindAndReturn("Needle");
-    local thread = inventory:FindAndReturn("Thread"):getCount();
-    local fabric = inventory:FindAndReturn("RippedSheets"):getCount(); --TODO use dirty sheets?
+    local thread = inventory:FindAndReturn("Thread");
+    local fabric = inventory:getCountType("Base.RippedSheets");
+
+    thread = thread:getRemainingUses();
 
     if needle then
-        for _,patches in ipairs({10,25,50}) do
+        for _, patches in ipairs({ 10, 25, 50 }) do
             if thread >= patches and fabric >= patches then
-                context:addOption("Practice sewing: "..patches.." patches", worldObjects, practiceSewing, patches, player);
+                context:addOption("Practice sewing: " .. patches .. " patches", worldObjects, practiceSewing, patches,
+                    player);
             end
         end
     end
@@ -51,4 +58,4 @@ end
 -- Game hooks
 -- ------------------------------------------------
 
-Events.OnFillWorldObjectContextMenu.Add(createMenuEntries);
+Events.OnFillInventoryObjectContextMenu.Add(createMenuEntries);
