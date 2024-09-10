@@ -1,0 +1,6 @@
+version=1
+id=3328486653
+title=Strosels sewing mod
+description=Adds tailoring QoL stuff
+tags=Build 41;Misc
+visibility=unlisted
